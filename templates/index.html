@@ -6,20 +6,26 @@
 {% block content %}
 <section class="hero-panel fade-in-up">
     <div class="hero-copy">
-        <span class="eyebrow">AI-assisted anemia screening</span>
-        <h2>AI-Powered Anemia Detection in Seconds</h2>
+        <span class="eyebrow"><i data-lucide="sparkles"></i> AI-assisted anemia screening</span>
+        <h2>Anemia detection from a <span class="gradient-text">single smartphone photo</span></h2>
         <p>
-            Screen conjunctiva and fingernail images in a trusted hospital-grade workflow,
-            then review confidence, Grad-CAM focus regions, and patient-ready reporting in one place.
+            Screen conjunctiva and fingernail images in a hospital-grade workflow, then review
+            confidence, Grad-CAM focus regions and patient-ready reports in one place.
         </p>
         <div class="hero-actions">
-            <a href="{{ url_for('scan_page') }}" class="btn btn-primary btn-lg">Quick Scan</a>
-            <a href="{{ url_for('analytics_page') }}" class="btn btn-outline-light btn-lg">Open Analytics</a>
+            <a href="{{ url_for('scan_page') }}" class="btn btn-primary btn-lg"><i data-lucide="scan-line"></i> Start Quick Scan</a>
+            <a href="{{ url_for('analytics_page') }}" class="btn btn-outline-light btn-lg"><i data-lucide="chart-column"></i> Open Analytics</a>
         </div>
+        <ul class="hero-points">
+            <li><i data-lucide="zap"></i> Results in seconds</li>
+            <li><i data-lucide="scan-eye"></i> Grad-CAM explainability</li>
+            <li><i data-lucide="file-text"></i> PDF reports</li>
+        </ul>
     </div>
     <div class="accuracy-card">
-        <span class="eyebrow text-white-50">Confidence benchmark</span>
-        <h3>{{ "%.1f"|format(performance.accuracy_badge) }}% Clinical Accuracy</h3>
+        <span class="eyebrow">Confidence benchmark</span>
+        <span class="accuracy-value">{{ "%.1f"|format(performance.accuracy_badge) }}%</span>
+        <h3>Clinical accuracy</h3>
         <div class="confidence-meter">
             <div class="confidence-fill" data-progress="{{ performance.accuracy_badge }}"></div>
         </div>
@@ -29,35 +35,35 @@
 
 <section class="stats-grid">
     <article class="stat-card fade-in-up">
-        <span>Total Scans</span>
+        <span>Total Scans <span class="stat-icon"><i data-lucide="activity"></i></span></span>
         <strong>{{ home_stats.total_scans }}</strong>
-        <small>All patient screenings stored in SQLite</small>
+        <small>All patient screenings stored</small>
     </article>
-    <article class="stat-card fade-in-up">
-        <span>Anemic Detected</span>
+    <article class="stat-card stat-danger fade-in-up">
+        <span>Anemic Detected <span class="stat-icon"><i data-lucide="droplet"></i></span></span>
         <strong class="text-danger-emphasis">{{ home_stats.anemic_detected }}</strong>
         <small>Flagged for follow-up review</small>
     </article>
-    <article class="stat-card fade-in-up">
-        <span>Non-Anemic</span>
+    <article class="stat-card stat-success fade-in-up">
+        <span>Non-Anemic <span class="stat-icon"><i data-lucide="heart-pulse"></i></span></span>
         <strong class="text-success-emphasis">{{ home_stats.non_anemic_detected }}</strong>
         <small>Healthy-leaning visual results</small>
     </article>
-    <article class="stat-card fade-in-up">
-        <span>This Week</span>
+    <article class="stat-card stat-info fade-in-up">
+        <span>This Week <span class="stat-icon"><i data-lucide="calendar-days"></i></span></span>
         <strong>{{ home_stats.this_week }}</strong>
-        <small>Scans completed over the last 7 days</small>
+        <small>Scans in the last 7 days</small>
     </article>
 </section>
 
-<div class="content-grid">
+<div class="content-grid wide-left">
     <section class="surface-card fade-in-up">
         <div class="section-header">
             <div>
                 <span class="eyebrow">Recent activity</span>
-                <h3>Recent 5 patients</h3>
+                <h3>Recent patients</h3>
             </div>
-            <a href="{{ url_for('history_page') }}" class="btn btn-sm btn-outline-secondary">View History</a>
+            <a href="{{ url_for('history_page') }}" class="btn btn-sm btn-outline-secondary">View history <i data-lucide="arrow-right"></i></a>
         </div>
         <div class="table-responsive">
             <table class="table app-table align-middle">
@@ -75,8 +81,13 @@
                         {% for scan in recent_scans %}
                             <tr>
                                 <td><a href="{{ url_for('result_page', scan_id=scan.id) }}">{{ scan.public_scan_id }}</a></td>
-                                <td>{{ scan.patient_name }}</td>
-                                <td>{{ scan.created_at.strftime("%d %b %Y, %H:%M") }}</td>
+                                <td>
+                                    <span class="patient-cell">
+                                        <span class="patient-initial">{{ (scan.patient_name or "?")[:1]|upper }}</span>
+                                        {{ scan.patient_name }}
+                                    </span>
+                                </td>
+                                <td class="text-secondary">{{ scan.created_at.strftime("%d %b %Y, %H:%M") }}</td>
                                 <td>
                                     <span class="badge result-badge {% if scan.is_anemic %}result-badge-danger{% else %}result-badge-success{% endif %}">
                                         {{ scan.prediction }}
@@ -87,7 +98,9 @@
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="5" class="empty-state-cell">No scans yet. Start with a new patient screening.</td>
+                            <td colspan="5" class="empty-state-cell">
+                                No scans yet. <a href="{{ url_for('scan_page') }}">Start with a new patient screening.</a>
+                            </td>
                         </tr>
                     {% endif %}
                 </tbody>
@@ -99,26 +112,45 @@
         <div class="section-header">
             <div>
                 <span class="eyebrow">Workflow</span>
-                <h3>How It Works</h3>
+                <h3>How it works</h3>
             </div>
         </div>
         <div class="steps-grid">
             <article class="step-card">
-                <div class="step-icon"><i data-lucide="upload-cloud"></i></div>
+                <div class="step-icon"><i data-lucide="cloud-upload"></i></div>
                 <h4>1. Upload</h4>
                 <p>Capture or upload a smartphone image of the eye conjunctiva or fingernail.</p>
             </article>
             <article class="step-card">
                 <div class="step-icon"><i data-lucide="cpu"></i></div>
                 <h4>2. Analyze</h4>
-                <p>The EfficientNet-B3 pipeline evaluates visual anemia markers and confidence levels.</p>
+                <p>EfficientNet-B3 evaluates visual anemia markers and confidence levels.</p>
             </article>
             <article class="step-card">
                 <div class="step-icon"><i data-lucide="file-heart"></i></div>
                 <h4>3. Results</h4>
-                <p>Review the verdict, AI focus region, risk level, and export a PDF report for records.</p>
+                <p>Review the verdict, AI focus region and risk level, then export a PDF report.</p>
             </article>
         </div>
     </section>
 </div>
+
+<section class="surface-card author-teaser fade-in-up" aria-label="About the author">
+    <div class="author-teaser-info">
+        <span class="author-avatar" aria-hidden="true">{{ author.initials }}</span>
+        <div>
+            <span class="eyebrow">Designed &amp; developed by</span>
+            <h3>{{ author.name }}</h3>
+            <p>{{ author.role }} · {{ author.education }}, {{ author.institute_short }}</p>
+        </div>
+    </div>
+    <div class="icon-btn-row">
+        <a href="mailto:{{ author.email }}" class="btn btn-outline-secondary btn-sm"><i data-lucide="mail"></i> Email</a>
+        <a href="{{ author.linkedin_url }}" class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+            LinkedIn
+        </a>
+        <a href="{{ url_for('author_page') }}" class="btn btn-primary btn-sm">View profile <i data-lucide="arrow-right"></i></a>
+    </div>
+</section>
 {% endblock %}

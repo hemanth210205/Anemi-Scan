@@ -35,6 +35,7 @@ from werkzeug.utils import secure_filename
 
 from config import (
     API_RATE_LIMIT_PER_MINUTE,
+    AUTHOR_PROFILE,
     API_RATE_LIMIT_WINDOW_SECONDS,
     ENABLE_GRADCAM,
     EVALUATION_LOGS_DIR,
@@ -1104,6 +1105,7 @@ def create_app() -> Flask:
             "predictor_loaded": predictor_is_loaded,
             "predictor_load_error": _predictor_load_error,
             "disclaimer_text": DISCLAIMER_TEXT,
+            "author": AUTHOR_PROFILE,
         }
 
     @app.before_request
@@ -1445,6 +1447,12 @@ def create_app() -> Flask:
             dataset_info=dataset_overview(),
             performance=performance_overview(),
         )
+
+    @app.route("/author")
+    def author_page():
+        """Show the developer profile and contact details."""
+
+        return render_template("author.html")
 
     return app
 

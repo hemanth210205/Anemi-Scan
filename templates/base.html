@@ -3,33 +3,45 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="{{ author.name }}">
+    <meta name="description" content="AnemiaVision AI - AI-assisted anemia screening from conjunctiva and fingernail images. Built by {{ author.name }}.">
     <title>{% block title %}AnemiaVision AI{% endblock %}</title>
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem("anemiavision-theme") === "dark") {
+                    document.documentElement.setAttribute("data-theme", "dark");
+                }
+            } catch (error) { /* storage unavailable */ }
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block extra_head %}{% endblock %}
 </head>
 <body data-endpoint="{{ request.endpoint or '' }}">
     <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="sidebar-backdrop" data-sidebar-close></div>
 
     <div class="app-shell">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <a href="{{ url_for('index') }}" class="brand">
                     <span class="brand-mark" aria-hidden="true">
-                        <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
                             <defs>
                                 <linearGradient id="brand-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#0A6E6E"/>
-                                    <stop offset="100%" stop-color="#2DC653"/>
+                                    <stop offset="0%" stop-color="#5EEAD4"/>
+                                    <stop offset="100%" stop-color="#34D399"/>
                                 </linearGradient>
                             </defs>
                             <ellipse cx="32" cy="32" rx="25" ry="16" fill="none" stroke="url(#brand-gradient)" stroke-width="5"/>
-                            <circle cx="32" cy="32" r="9" fill="#0D1B2A"/>
+                            <circle cx="32" cy="32" r="9" fill="#04252B"/>
                             <circle cx="32" cy="32" r="4" fill="#FFFFFF"/>
-                            <path d="M20 32c2-7 8-12 12-12s10 5 12 12" fill="none" stroke="#E63946" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M20 32c2-7 8-12 12-12s10 5 12 12" fill="none" stroke="#FB7185" stroke-width="3" stroke-linecap="round"/>
                         </svg>
                     </span>
                     <span>
@@ -43,6 +55,7 @@
             </div>
 
             <nav class="sidebar-nav" aria-label="Primary">
+                <span class="nav-section-label">Workspace</span>
                 <a href="{{ url_for('index') }}" class="nav-item {% if request.endpoint == 'index' %}active{% endif %}">
                     <i data-lucide="layout-dashboard"></i>
                     <span>Dashboard</span>
@@ -50,24 +63,36 @@
                 <a href="{{ url_for('scan_page') }}" class="nav-item {% if request.endpoint == 'scan_page' %}active{% endif %}">
                     <i data-lucide="scan-line"></i>
                     <span>New Scan</span>
+                    <kbd class="nav-kbd">N</kbd>
                 </a>
                 <a href="{{ url_for('history_page') }}" class="nav-item {% if request.endpoint == 'history_page' %}active{% endif %}">
                     <i data-lucide="history"></i>
                     <span>Patient History</span>
+                    <kbd class="nav-kbd">H</kbd>
                 </a>
                 <a href="{{ url_for('analytics_page') }}" class="nav-item {% if request.endpoint == 'analytics_page' %}active{% endif %}">
                     <i data-lucide="chart-column"></i>
                     <span>Analytics</span>
                 </a>
+                <span class="nav-section-label">Project</span>
                 <a href="{{ url_for('about_page') }}" class="nav-item {% if request.endpoint == 'about_page' %}active{% endif %}">
                     <i data-lucide="info"></i>
                     <span>About</span>
                 </a>
+                <a href="{{ url_for('author_page') }}" class="nav-item {% if request.endpoint == 'author_page' %}active{% endif %}">
+                    <i data-lucide="user-round"></i>
+                    <span>Author</span>
+                </a>
             </nav>
 
-            <div class="sidebar-footer">
-                <p>{{ disclaimer_text }}</p>
-            </div>
+            <a href="{{ url_for('author_page') }}" class="sidebar-author">
+                <span class="author-avatar small" aria-hidden="true">{{ author.initials }}</span>
+                <span>
+                    <small>Built by</small>
+                    <strong>{{ author.name }}</strong>
+                    <em>{{ author.role }} · {{ author.institute_short }}</em>
+                </span>
+            </a>
         </aside>
 
         <div class="page-area">
@@ -77,24 +102,33 @@
                         <i data-lucide="menu"></i>
                     </button>
                     <div>
-                        <p class="topbar-label">Live hospital workspace</p>
+                        <p class="topbar-label">
+                            <span class="live-dot {% if predictor_loaded %}is-live{% endif %}" aria-hidden="true"></span>
+                            {% if predictor_loaded %}Model online{% else %}Model offline{% endif %} · Live workspace
+                        </p>
                         <h1 class="topbar-title">{% block page_title %}AnemiaVision AI{% endblock %}</h1>
                     </div>
                 </div>
                 <div class="topbar-right">
                     <div class="topbar-info">
-                        <span class="topbar-info-label">Current date & time</span>
-                        <strong id="currentDateTime" aria-live="polite"></strong>
+                        <i data-lucide="calendar-clock"></i>
+                        <span>
+                            <span class="topbar-info-label">Date &amp; time</span>
+                            <strong id="currentDateTime" aria-live="polite"></strong>
+                        </span>
                     </div>
                     <div class="topbar-counter">
-                        <span>Total scans</span>
-                        <strong>{{ total_scans_counter }}</strong>
+                        <i data-lucide="activity"></i>
+                        <span>
+                            <span>Total scans</span>
+                            <strong>{{ total_scans_counter }}</strong>
+                        </span>
                     </div>
                     <div class="toolbar-actions">
-                        <button class="btn topbar-icon" type="button" id="largeTextToggle" aria-pressed="false" aria-label="Toggle large text">
-                            <i data-lucide="zoom-in"></i>
+                        <button class="btn topbar-icon" type="button" id="largeTextToggle" aria-pressed="false" aria-label="Toggle large text" title="Large text">
+                            <i data-lucide="type"></i>
                         </button>
-                        <button class="btn topbar-icon" type="button" id="darkModeToggle" aria-pressed="false" aria-label="Toggle dark mode">
+                        <button class="btn topbar-icon" type="button" id="darkModeToggle" aria-pressed="false" aria-label="Toggle dark mode" title="Dark mode">
                             <i data-lucide="moon-star"></i>
                         </button>
                     </div>
@@ -125,14 +159,28 @@
             </main>
 
             <footer class="app-footer">
-                <p>{{ disclaimer_text }}</p>
+                <div class="footer-brand">
+                    <strong>AnemiaVision AI</strong>
+                    <span>© {{ current_year }} · Designed &amp; developed by
+                        <a href="{{ url_for('author_page') }}">{{ author.name }}</a>
+                    </span>
+                </div>
+                <div class="footer-links">
+                    <a href="mailto:{{ author.email }}" aria-label="Email {{ author.name }}"><i data-lucide="mail"></i></a>
+                    <a href="{{ author.linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn profile">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+                    </a>
+                    <a href="{{ author.github_url }}" target="_blank" rel="noopener" aria-label="GitHub profile">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.62-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg>
+                    </a>
+                </div>
             </footer>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     {% block extra_scripts %}{% endblock %}
 </body>

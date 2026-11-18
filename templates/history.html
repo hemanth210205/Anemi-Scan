@@ -11,7 +11,7 @@
             <h3>Patient history</h3>
         </div>
         <a href="{{ url_for('export_history_csv', q=filters.q, result=filters.result, risk=filters.risk, start_date=filters.start_date, end_date=filters.end_date) }}" class="btn btn-outline-secondary">
-            Export All as CSV
+            <i data-lucide="download"></i> Export CSV
         </a>
     </div>
 
@@ -33,7 +33,7 @@
         </select>
         <input class="form-control" type="date" name="start_date" value="{{ filters.start_date }}">
         <input class="form-control" type="date" name="end_date" value="{{ filters.end_date }}">
-        <button class="btn btn-primary" type="submit">Apply Filters</button>
+        <button class="btn btn-primary" type="submit"><i data-lucide="filter"></i> Apply</button>
     </form>
 
     <div class="table-responsive">
@@ -54,8 +54,13 @@
                 {% if scans %}
                     {% for scan in scans %}
                         <tr>
-                            <td>{{ scan.public_scan_id }}</td>
-                            <td>{{ scan.patient_name }}</td>
+                            <td class="fw-semibold">{{ scan.public_scan_id }}</td>
+                            <td>
+                                <span class="patient-cell">
+                                    <span class="patient-initial">{{ (scan.patient_name or "?")[:1]|upper }}</span>
+                                    {{ scan.patient_name }}
+                                </span>
+                            </td>
                             <td>{{ scan.age or "N/A" }}</td>
                             <td>{{ scan.gender or "N/A" }}</td>
                             <td>{{ scan.created_at.strftime("%d %b %Y") }}</td>

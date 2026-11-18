@@ -22,18 +22,23 @@
         <article class="surface-subcard">
             <h4>EfficientNet-B3 architecture</h4>
             <svg class="architecture-diagram" viewBox="0 0 620 240" role="img" aria-label="EfficientNet-B3 model diagram">
-                <rect x="20" y="70" width="120" height="90" rx="20" fill="#EAF7F7" stroke="#0A6E6E" stroke-width="3"/>
-                <text x="80" y="115" text-anchor="middle">Input Image</text>
-                <text x="80" y="138" text-anchor="middle">300 × 300</text>
-                <line x1="140" y1="115" x2="210" y2="115" stroke="#0A6E6E" stroke-width="4"/>
-                <rect x="210" y="55" width="130" height="120" rx="20" fill="#F3F9FB" stroke="#0D1B2A" stroke-width="3"/>
-                <text x="275" y="108" text-anchor="middle">EfficientNet-B3</text>
-                <text x="275" y="132" text-anchor="middle">Feature Extractor</text>
-                <line x1="340" y1="115" x2="410" y2="115" stroke="#0A6E6E" stroke-width="4"/>
-                <rect x="410" y="55" width="190" height="120" rx="20" fill="#FFF5F5" stroke="#E63946" stroke-width="3"/>
-                <text x="505" y="95" text-anchor="middle">Custom Dense Head</text>
-                <text x="505" y="118" text-anchor="middle">1536 → 512 → 128 → 2</text>
-                <text x="505" y="141" text-anchor="middle">BN, ReLU, Dropout</text>
+                <defs>
+                    <marker id="arch-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                        <path d="M0 0 L10 5 L0 10 z" class="arrow"/>
+                    </marker>
+                </defs>
+                <rect x="20" y="70" width="120" height="90" rx="16" class="node node-accent"/>
+                <text x="80" y="111" text-anchor="middle" font-weight="600">Input Image</text>
+                <text x="80" y="133" text-anchor="middle" class="muted">300 × 300 RGB</text>
+                <line x1="142" y1="115" x2="206" y2="115" class="edge" marker-end="url(#arch-arrow)"/>
+                <rect x="210" y="55" width="130" height="120" rx="16" class="node"/>
+                <text x="275" y="108" text-anchor="middle" font-weight="600">EfficientNet-B3</text>
+                <text x="275" y="130" text-anchor="middle" class="muted">Feature extractor</text>
+                <line x1="342" y1="115" x2="406" y2="115" class="edge" marker-end="url(#arch-arrow)"/>
+                <rect x="410" y="55" width="190" height="120" rx="16" class="node node-danger"/>
+                <text x="505" y="95" text-anchor="middle" font-weight="600">Custom Dense Head</text>
+                <text x="505" y="118" text-anchor="middle" class="muted">1536 → 512 → 128 → 2</text>
+                <text x="505" y="141" text-anchor="middle" class="muted">BN · ReLU · Dropout</text>
             </svg>
         </article>
 
@@ -79,22 +84,22 @@
             <tbody>
                 <tr>
                     <td>Clinical Accuracy</td>
-                    <td>{{ "%.1f"|format(performance.accuracy_badge) }}%</td>
+                    <td class="metric-value">{{ "%.1f"|format(performance.accuracy_badge) }}%</td>
                     <td>{{ performance.source }}</td>
                 </tr>
                 <tr>
                     <td>Sensitivity</td>
-                    <td>{{ "%.1f"|format(performance.sensitivity * 100) }}%</td>
+                    <td class="metric-value">{{ "%.1f"|format(performance.sensitivity * 100) }}%</td>
                     <td>Anemic recall target</td>
                 </tr>
                 <tr>
                     <td>Specificity</td>
-                    <td>{{ "%.1f"|format(performance.specificity * 100) }}%</td>
+                    <td class="metric-value">{{ "%.1f"|format(performance.specificity * 100) }}%</td>
                     <td>Non-anemic true negative target</td>
                 </tr>
                 <tr>
                     <td>AUC-ROC</td>
-                    <td>{{ "%.2f"|format(performance.auc_roc) }}</td>
+                    <td class="metric-value">{{ "%.2f"|format(performance.auc_roc) }}</td>
                     <td>Binary discrimination target</td>
                 </tr>
             </tbody>
@@ -115,5 +120,20 @@
         <li>Visual estimates of hemoglobin are approximate and should be confirmed with laboratory testing.</li>
         <li>Patients with symptoms or high-risk results should be referred for professional medical review.</li>
     </ul>
+</section>
+
+<section class="surface-card author-teaser fade-in-up" aria-label="Project author">
+    <div class="author-teaser-info">
+        <span class="author-avatar" aria-hidden="true">{{ author.initials }}</span>
+        <div>
+            <span class="eyebrow">Project author</span>
+            <h3>{{ author.name }}</h3>
+            <p>{{ author.role }} · {{ author.institute }}</p>
+        </div>
+    </div>
+    <div class="icon-btn-row">
+        <a href="mailto:{{ author.email }}" class="btn btn-outline-secondary btn-sm"><i data-lucide="mail"></i> {{ author.email }}</a>
+        <a href="{{ url_for('author_page') }}" class="btn btn-primary btn-sm">Full profile <i data-lucide="arrow-right"></i></a>
+    </div>
 </section>
 {% endblock %}

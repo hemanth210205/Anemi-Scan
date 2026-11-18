@@ -346,3 +346,45 @@ def serializable_project_config() -> dict[str, object]:
 
 
 ensure_runtime_directories()
+
+
+# Author / developer profile shown in the web UI (sidebar, footer, /author page).
+AUTHOR_PROFILE = {
+    "name": "Gunti Hemanth Kumar",
+    "initials": "GH",
+    "role": "AI Engineer",
+    "education": "Computer Science and Engineering graduate",
+    "institute": "Indian Institute of Information Technology, Surat",
+    "institute_short": "IIIT Surat",
+    "tagline": (
+        "Building RAG systems, multi-agent workflows and low-latency inference "
+        "that hold up in production."
+    ),
+    "bio": (
+        "I'm an AI Engineer focused on moving machine learning and large language models "
+        "from prototype notebooks into resilient, observable production systems. My work "
+        "centres on retrieval-augmented generation (RAG), multi-agent workflows and "
+        "low-latency inference pipelines."
+    ),
+    "project_note": (
+        "AnemiaVision AI applies that same discipline to healthcare: an EfficientNet-B3 "
+        "screening model with Grad-CAM explainability, wrapped in a clinical workflow "
+        "that a health worker can actually use from a smartphone."
+    ),
+    "phone": "+91 6301716863",
+    "phone_href": "tel:+916301716863",
+    "email": "hk744610@gmail.com",
+    "linkedin": "linkedin.com/in/hemanth131104",
+    "linkedin_url": "https://www.linkedin.com/in/hemanth131104",
+    "github": "github.com/hemanth210205",
+    "github_url": "https://github.com/hemanth210205",
+    # Tech stack actually used in this project (see requirements.txt / Dockerfile).
+    "tech_stack": [
+        ("Deep learning", "brain-circuit", ["PyTorch", "Torchvision", "EfficientNet-B3", "Grad-CAM"]),
+        ("Image processing", "image", ["OpenCV", "Pillow", "NumPy"]),
+        ("Backend", "server", ["Python", "Flask", "Flask-SQLAlchemy", "SQLite", "ReportLab"]),
+        ("Frontend", "layout-template", ["HTML", "Bootstrap 5", "JavaScript", "Chart.js"]),
+        ("Evaluation", "chart-line", ["scikit-learn", "pandas", "Matplotlib", "Seaborn"]),
+        ("Deployment", "container", ["Docker", "Docker Compose", "Gunicorn", "Caddy"]),
+    ],
+}

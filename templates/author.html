@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Author | AnemiaVision AI{% endblock %}
+{% block page_title %}About the Author{% endblock %}
+
+{% block content %}
+{% set linkedin_svg %}<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>{% endset %}
+{% set github_svg %}<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.62-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg>{% endset %}
+
+<section class="surface-card fade-in-up" aria-labelledby="authorName">
+    <div class="author-profile">
+        <div class="author-identity">
+            <span class="author-avatar" aria-hidden="true">{{ author.initials }}</span>
+            <div>
+                <span class="eyebrow">Designed &amp; developed by</span>
+                <h2 id="authorName">{{ author.name }}</h2>
+                <p>{{ author.education }} · {{ author.institute_short }}</p>
+                <span class="author-role-pill"><i data-lucide="badge-check"></i> {{ author.role }}</span>
+            </div>
+        </div>
+        <div class="hero-actions mt-0">
+            <a class="btn btn-primary" href="mailto:{{ author.email }}"><i data-lucide="mail"></i> Email me</a>
+            <a class="btn btn-outline-secondary" href="{{ author.phone_href }}"><i data-lucide="phone"></i> Call</a>
+            <a class="btn btn-outline-secondary" href="{{ author.linkedin_url }}" target="_blank" rel="noopener">{{ linkedin_svg|safe }} LinkedIn</a>
+            <a class="btn btn-outline-secondary" href="{{ author.github_url }}" target="_blank" rel="noopener">{{ github_svg|safe }} GitHub</a>
+        </div>
+    </div>
+</section>
+
+<div class="content-grid wide-left">
+    <section class="surface-card fade-in-up">
+        <div class="section-header compact">
+            <div>
+                <span class="eyebrow">Profile</span>
+                <h3>About me</h3>
+            </div>
+        </div>
+        <p class="author-bio">{{ author.bio }}</p>
+        <p class="author-bio dim">{{ author.project_note }}</p>
+
+        <div class="section-header compact">
+            <div>
+                <span class="eyebrow">What I built</span>
+                <h3>Contributions to AnemiaVision AI</h3>
+            </div>
+        </div>
+        <div class="contribution-list">
+            <div class="contribution-item">
+                <span class="step-icon"><i data-lucide="brain-circuit"></i></span>
+                <div>
+                    <strong>Deep learning pipeline</strong>
+                    <p>EfficientNet-B3 transfer learning with a custom dense head, augmentation and temperature-scaled confidence.</p>
+                </div>
+            </div>
+            <div class="contribution-item">
+                <span class="step-icon"><i data-lucide="scan-eye"></i></span>
+                <div>
+                    <strong>Explainability</strong>
+                    <p>Grad-CAM heatmaps so clinicians can see which region drove each prediction.</p>
+                </div>
+            </div>
+            <div class="contribution-item">
+                <span class="step-icon"><i data-lucide="hospital"></i></span>
+                <div>
+                    <strong>Clinical workflow</strong>
+                    <p>Image-quality validation, patient records, PDF reports, analytics and a rate-limited REST API.</p>
+                </div>
+            </div>
+            <div class="contribution-item">
+                <span class="step-icon"><i data-lucide="container"></i></span>
+                <div>
+                    <strong>Deployment</strong>
+                    <p>Dockerised Flask + Gunicorn service with a health endpoint and Caddy reverse-proxy config.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="surface-card fade-in-up">
+        <div class="section-header compact">
+            <div>
+                <span class="eyebrow">Get in touch</span>
+                <h3>Contact details</h3>
+            </div>
+        </div>
+        <div class="contact-list">
+            <a class="contact-item" href="{{ author.phone_href }}">
+                <span class="contact-icon"><i data-lucide="phone"></i></span>
+                <span class="contact-text"><small>Phone</small><strong>{{ author.phone }}</strong></span>
+                <i data-lucide="arrow-up-right" class="contact-arrow"></i>
+            </a>
+            <a class="contact-item" href="mailto:{{ author.email }}">
+                <span class="contact-icon"><i data-lucide="mail"></i></span>
+                <span class="contact-text"><small>Email</small><strong>{{ author.email }}</strong></span>
+                <i data-lucide="arrow-up-right" class="contact-arrow"></i>
+            </a>
+            <a class="contact-item" href="{{ author.linkedin_url }}" target="_blank" rel="noopener">
+                <span class="contact-icon">{{ linkedin_svg|safe }}</span>
+                <span class="contact-text"><small>LinkedIn</small><strong>{{ author.linkedin }}</strong></span>
+                <i data-lucide="arrow-up-right" class="contact-arrow"></i>
+            </a>
+            <a class="contact-item" href="{{ author.github_url }}" target="_blank" rel="noopener">
+                <span class="contact-icon">{{ github_svg|safe }}</span>
+                <span class="contact-text"><small>GitHub</small><strong>{{ author.github }}</strong></span>
+                <i data-lucide="arrow-up-right" class="contact-arrow"></i>
+            </a>
+        </div>
+        <div class="author-edu-row">
+            <i data-lucide="graduation-cap"></i>
+            <div>
+                <strong>{{ author.institute }}</strong>
+                <span>Computer Science and Engineering · Graduate</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<section class="surface-card fade-in-up">
+    <div class="section-header compact">
+        <div>
+            <span class="eyebrow">Toolkit</span>
+            <h3>Tech stack used in this project</h3>
+        </div>
+    </div>
+    <div class="stack-groups">
+        {% for group, icon, items in author.tech_stack %}
+            <div class="surface-subcard stack-group">
+                <h4><i data-lucide="{{ icon }}"></i> {{ group }}</h4>
+                <div class="skill-cloud">
+                    {% for item in items %}
+                        <span class="skill-chip">{{ item }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

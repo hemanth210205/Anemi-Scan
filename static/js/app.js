@@ -12,8 +12,14 @@ function updateCurrentDateTime() {
 function applyStoredPreferences() {
     const html = document.documentElement;
     const body = document.body;
-    const storedTheme = localStorage.getItem("anemiavision-theme");
-    const largeText = localStorage.getItem("anemiavision-large-text") === "true";
+    let storedTheme = null;
+    let largeText = false;
+    try {
+        storedTheme = localStorage.getItem("anemiavision-theme");
+        largeText = localStorage.getItem("anemiavision-large-text") === "true";
+    } catch (error) {
+        /* storage unavailable */
+    }
 
     if (storedTheme === "dark") {
         html.setAttribute("data-theme", "dark");
@@ -36,6 +42,7 @@ function bindPreferences() {
             html.setAttribute("data-theme", isDark ? "light" : "dark");
             localStorage.setItem("anemiavision-theme", isDark ? "light" : "dark");
             darkModeToggle.setAttribute("aria-pressed", String(!isDark));
+            document.dispatchEvent(new CustomEvent("anemiavision:themechange"));
         });
     }
 
@@ -52,16 +59,22 @@ function bindPreferences() {
 
 function bindSidebar() {
     const sidebar = document.getElementById("sidebar");
-    const openButton = document.querySelector("[data-sidebar-open]");
-    const closeButton = document.querySelector("[data-sidebar-close]");
-
     if (!sidebar) return;
-    if (openButton) {
-        openButton.addEventListener("click", () => sidebar.classList.add("open"));
-    }
-    if (closeButton) {
-        closeButton.addEventListener("click", () => sidebar.classList.remove("open"));
-    }
+
+    const setOpen = (open) => {
+        sidebar.classList.toggle("open", open);
+        document.body.classList.toggle("sidebar-open", open);
+    };
+
+    document.querySelectorAll("[data-sidebar-open]").forEach((button) => {
+        button.addEventListener("click", () => setOpen(true));
+    });
+    document.querySelectorAll("[data-sidebar-close]").forEach((button) => {
+        button.addEventListener("click", () => setOpen(false));
+    });
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setOpen(false);
+    });
 }
 
 function animateConfidenceMeters() {

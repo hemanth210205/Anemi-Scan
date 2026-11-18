@@ -33,12 +33,12 @@
             <ul class="nav nav-pills scan-tabs" id="scanTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="upload-tab" data-bs-toggle="pill" data-bs-target="#upload-pane" type="button" role="tab">
-                        Upload Image
+                        <i data-lucide="image-up"></i> Upload Image
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="camera-tab" data-bs-toggle="pill" data-bs-target="#camera-pane" type="button" role="tab">
-                        Camera Capture
+                        <i data-lucide="camera"></i> Camera Capture
                     </button>
                 </li>
             </ul>
@@ -59,6 +59,7 @@
                             <i data-lucide="cloud-upload"></i>
                             <h4>Drag & drop an image here</h4>
                             <p>or tap to upload (mobile opens the camera).</p>
+                            <span class="dropzone-hint">JPG, PNG or WEBP · conjunctiva or fingernail</span>
                         </div>
                     </label>
                 </div>
@@ -81,7 +82,7 @@
             <div class="preview-panel mt-4">
                 <img id="imagePreview" class="preview-image d-none" alt="Selected preview">
                 <div id="previewPlaceholder" class="preview-placeholder">
-                    Preview will appear here after upload or capture.
+                    <span>Preview will appear here after upload or capture.</span>
                 </div>
             </div>
 
@@ -94,14 +95,15 @@
         </div>
 
         <div class="scan-form-panel">
+            <h4 class="form-title"><i data-lucide="clipboard-list"></i> Patient details</h4>
             <div class="row g-3">
                 <div class="col-12">
                     <label class="form-label" for="patientName">Name*</label>
-                    <input class="form-control" id="patientName" name="patient_name" required>
+                    <input class="form-control" id="patientName" name="patient_name" placeholder="Full name" autocomplete="off" required>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label" for="patientAge">Age*</label>
-                    <input class="form-control" id="patientAge" name="age" type="number" min="0" max="120" required>
+                    <input class="form-control" id="patientAge" name="age" type="number" min="0" max="120" placeholder="Years" required>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label" for="gender">Gender*</label>
@@ -114,7 +116,7 @@
                 </div>
                 <div class="col-12">
                     <label class="form-label" for="phone">Phone (optional)</label>
-                    <input class="form-control" id="phone" name="phone" type="tel">
+                    <input class="form-control" id="phone" name="phone" type="tel" placeholder="+91 ...">
                 </div>
                 <div class="col-12">
                     <label class="form-label" for="imageType">Image Type</label>
@@ -126,7 +128,7 @@
                 </div>
                 <div class="col-12">
                     <label class="form-label" for="notes">Notes (optional)</label>
-                    <textarea class="form-control" id="notes" name="notes" rows="4"></textarea>
+                    <textarea class="form-control" id="notes" name="notes" rows="4" placeholder="Symptoms, history, observations..."></textarea>
                 </div>
                 <div class="col-12">
                     <button class="btn btn-primary btn-lg w-100" id="submitScanButton" {% if not predictor_loaded %}disabled{% endif %}>
