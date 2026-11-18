@@ -1,4 +1,4 @@
-"""Central configuration for the AnemiaVision AI project.
+"""Central configuration for the AnemiScan project.
 
 This module keeps all runtime settings in one place so the training scripts,
 evaluation utilities, and Flask application stay aligned.
@@ -367,7 +367,7 @@ AUTHOR_PROFILE = {
         "low-latency inference pipelines."
     ),
     "project_note": (
-        "AnemiaVision AI applies that same discipline to healthcare: an EfficientNet-B3 "
+        "AnemiScan applies that same discipline to healthcare: an EfficientNet-B3 "
         "screening model with Grad-CAM explainability, wrapped in a clinical workflow "
         "that a health worker can actually use from a smartphone."
     ),

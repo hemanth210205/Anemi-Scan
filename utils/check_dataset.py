@@ -1,4 +1,4 @@
-"""Dataset integrity checker for AnemiaVision AI."""
+"""Dataset integrity checker for AnemiScan."""
 
 from __future__ import annotations
 

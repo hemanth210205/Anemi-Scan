@@ -165,5 +165,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const payload = JSON.parse(payloadElement.textContent);
     renderAll(payload);
-    document.addEventListener("anemiavision:themechange", () => renderAll(payload));
+    document.addEventListener("anemiscan:themechange", () => renderAll(payload));
 });

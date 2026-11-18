@@ -15,8 +15,8 @@ function applyStoredPreferences() {
     let storedTheme = null;
     let largeText = false;
     try {
-        storedTheme = localStorage.getItem("anemiavision-theme");
-        largeText = localStorage.getItem("anemiavision-large-text") === "true";
+        storedTheme = localStorage.getItem("anemiscan-theme");
+        largeText = localStorage.getItem("anemiscan-large-text") === "true";
     } catch (error) {
         /* storage unavailable */
     }
@@ -40,9 +40,9 @@ function bindPreferences() {
         darkModeToggle.addEventListener("click", () => {
             const isDark = html.getAttribute("data-theme") === "dark";
             html.setAttribute("data-theme", isDark ? "light" : "dark");
-            localStorage.setItem("anemiavision-theme", isDark ? "light" : "dark");
+            localStorage.setItem("anemiscan-theme", isDark ? "light" : "dark");
             darkModeToggle.setAttribute("aria-pressed", String(!isDark));
-            document.dispatchEvent(new CustomEvent("anemiavision:themechange"));
+            document.dispatchEvent(new CustomEvent("anemiscan:themechange"));
         });
     }
 
@@ -51,7 +51,7 @@ function bindPreferences() {
         largeTextToggle.addEventListener("click", () => {
             body.classList.toggle("large-text");
             const enabled = body.classList.contains("large-text");
-            localStorage.setItem("anemiavision-large-text", String(enabled));
+            localStorage.setItem("anemiscan-large-text", String(enabled));
             largeTextToggle.setAttribute("aria-pressed", String(enabled));
         });
     }

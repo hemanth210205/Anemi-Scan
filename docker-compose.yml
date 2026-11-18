@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: anemia-vision-ai
+    container_name: anemi-scan
     ports:
       - "5000:5000"
     environment:

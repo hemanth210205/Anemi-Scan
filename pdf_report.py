@@ -1,4 +1,4 @@
-"""Professional PDF report generation for AnemiaVision AI."""
+"""Professional PDF report generation for AnemiScan."""
 
 from __future__ import annotations
 
@@ -60,7 +60,7 @@ def _draw_header(pdf: canvas.Canvas, page_width: float, page_height: float) -> N
 
     pdf.setFillColor(colors.white)
     pdf.setFont("Helvetica-Bold", 22)
-    pdf.drawString(90, page_height - 43, "AnemiaVision AI")
+    pdf.drawString(90, page_height - 43, "AnemiScan")
     pdf.setFont("Helvetica", 10)
     pdf.drawString(90, page_height - 60, "Hospital-grade anemia screening report")
 
@@ -203,7 +203,7 @@ def generate_pdf_report(record: Any, output_path: str | Path | None = None) -> P
     """Generate a production-ready screening report PDF with robust fallbacks."""
 
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-    report_path = Path(output_path).resolve() if output_path else REPORTS_DIR / f"anemiavision_report_{getattr(record, 'id', 'scan')}.pdf"
+    report_path = Path(output_path).resolve() if output_path else REPORTS_DIR / f"anemiscan_report_{getattr(record, 'id', 'scan')}.pdf"
     report_path.parent.mkdir(parents=True, exist_ok=True)
 
     pdf = canvas.Canvas(str(report_path), pagesize=A4)

@@ -1,4 +1,4 @@
-"""Image validation utilities for the AnemiaVision AI prediction pipeline.
+"""Image validation utilities for the AnemiScan prediction pipeline.
 
 The hospital-facing web app and the standalone prediction helpers both rely on
 this module so that uploads are checked consistently before inference starts.

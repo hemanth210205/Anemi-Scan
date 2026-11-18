@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="{{ author.name }}">
-    <meta name="description" content="AnemiaVision AI - AI-assisted anemia screening from conjunctiva and fingernail images. Built by {{ author.name }}.">
-    <title>{% block title %}AnemiaVision AI{% endblock %}</title>
+    <meta name="description" content="AnemiScan - AI-assisted anemia screening from conjunctiva and fingernail images. Built by {{ author.name }}.">
+    <title>{% block title %}AnemiScan{% endblock %}</title>
     <script>
         (function () {
             try {
-                if (localStorage.getItem("anemiavision-theme") === "dark") {
+                if (localStorage.getItem("anemiscan-theme") === "dark") {
                     document.documentElement.setAttribute("data-theme", "dark");
                 }
             } catch (error) { /* storage unavailable */ }
@@ -45,7 +45,7 @@
                         </svg>
                     </span>
                     <span>
-                        <strong>AnemiaVision AI</strong>
+                        <strong>AnemiScan</strong>
                         <small>Medical Screening Suite</small>
                     </span>
                 </a>
@@ -106,7 +106,7 @@
                             <span class="live-dot {% if predictor_loaded %}is-live{% endif %}" aria-hidden="true"></span>
                             {% if predictor_loaded %}Model online{% else %}Model offline{% endif %} · Live workspace
                         </p>
-                        <h1 class="topbar-title">{% block page_title %}AnemiaVision AI{% endblock %}</h1>
+                        <h1 class="topbar-title">{% block page_title %}AnemiScan{% endblock %}</h1>
                     </div>
                 </div>
                 <div class="topbar-right">
@@ -137,7 +137,8 @@
 
             <main id="main-content" class="content-wrap">
                 <section class="disclaimer-banner fade-in-up" aria-label="Clinical disclaimer">
-                    <i data-lucide="shield-alert"></i>
+                    <span class="disclaimer-icon"><i data-lucide="stethoscope"></i></span>
+                    <span class="disclaimer-tag">Screening aid</span>
                     <p>{{ disclaimer_text }}</p>
                 </section>
 
@@ -160,7 +161,7 @@
 
             <footer class="app-footer">
                 <div class="footer-brand">
-                    <strong>AnemiaVision AI</strong>
+                    <strong>AnemiScan</strong>
                     <span>© {{ current_year }} · Designed &amp; developed by
                         <a href="{{ url_for('author_page') }}">{{ author.name }}</a>
                     </span>

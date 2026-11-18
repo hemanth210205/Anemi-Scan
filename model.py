@@ -1,4 +1,4 @@
-"""Model utilities for AnemiaVision AI."""
+"""Model utilities for AnemiScan."""
 
 from __future__ import annotations
 

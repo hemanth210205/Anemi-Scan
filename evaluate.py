@@ -1,4 +1,4 @@
-"""Evaluation pipeline for Stage 2 AnemiaVision AI checkpoints."""
+"""Evaluation pipeline for Stage 2 AnemiScan checkpoints."""
 
 from __future__ import annotations
 

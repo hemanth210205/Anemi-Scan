@@ -1,4 +1,4 @@
-"""Dataset discovery and DataLoader utilities for AnemiaVision AI."""
+"""Dataset discovery and DataLoader utilities for AnemiScan."""
 
 from __future__ import annotations
 

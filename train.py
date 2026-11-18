@@ -1,4 +1,4 @@
-"""Training pipeline for the Stage 2 AnemiaVision AI classifier."""
+"""Training pipeline for the Stage 2 AnemiScan classifier."""
 
 from __future__ import annotations
 
@@ -89,7 +89,7 @@ def setup_logger(log_file: Path) -> logging.Logger:
     """Create a console + file logger for training runs."""
 
     log_file.parent.mkdir(parents=True, exist_ok=True)
-    logger = logging.getLogger("anemiavision.training")
+    logger = logging.getLogger("anemiscan.training")
     logger.setLevel(logging.INFO)
     logger.propagate = False
 

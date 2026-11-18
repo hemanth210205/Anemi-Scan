@@ -1,4 +1,4 @@
-# AnemiaVision AI
+# AnemiScan
 
 AI-powered anemia screening platform for conjunctiva and fingernail image analysis using deep learning. The application provides anemia prediction, Grad-CAM explainability, PDF report generation, patient record management, and analytics through a Flask-based web application.
 
@@ -6,7 +6,7 @@ AI-powered anemia screening platform for conjunctiva and fingernail image analys
 
 ## Author
 
-**Gunti Hemanth**
+**Gunti Hemanth Kumar**
 
 ---
 
@@ -27,7 +27,7 @@ AI-powered anemia screening platform for conjunctiva and fingernail image analys
 
 ## Project Overview
 
-AnemiaVision AI is designed to assist healthcare professionals by providing quick anemia risk assessment using smartphone images.
+AnemiScan is designed to assist healthcare professionals by providing quick anemia risk assessment using smartphone images.
 
 ### Workflow
 
@@ -112,8 +112,8 @@ python utils/check_dataset.py
 ### Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/anemia-detection.git
-cd anemia-detection
+git clone https://github.com/hemanth210205/Anemi-Scan.git
+cd Anemi-Scan
 ```
 
 ### Create Virtual Environment
@@ -240,7 +240,7 @@ Example response
 ## Project Structure
 
 ```
-anemia-detection/
+Anemi-Scan/
 │
 ├── app.py
 ├── train.py

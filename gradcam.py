@@ -1,4 +1,4 @@
-"""Grad-CAM and temperature-scaling utilities for AnemiaVision AI."""
+"""Grad-CAM and temperature-scaling utilities for AnemiScan."""
 
 from __future__ import annotations
 

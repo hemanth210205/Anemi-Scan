@@ -1,4 +1,4 @@
-"""Production-oriented prediction helpers for AnemiaVision AI."""
+"""Production-oriented prediction helpers for AnemiScan."""
 
 from __future__ import annotations
 

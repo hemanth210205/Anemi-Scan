@@ -1,4 +1,4 @@
-"""Hospital-grade Flask web application for AnemiaVision AI."""
+"""Hospital-grade Flask web application for AnemiScan."""
 
 from __future__ import annotations
 
@@ -200,7 +200,7 @@ class Scan(db.Model):
         """Return a concise shareable summary."""
 
         return (
-            f"AnemiaVision AI screening for {self.patient_name}: "
+            f"AnemiScan screening for {self.patient_name}: "
             f"{self.prediction} with {self.confidence_percent:.1f}% confidence."
         )
 
@@ -1067,7 +1067,7 @@ def render_result_screen(scan: Scan, quality: dict[str, Any], persisted: bool):
         whatsapp_share_url=f"https://wa.me/?text={quote(share_text)}",
         email_share_url=(
             "mailto:?subject="
-            + quote(f"AnemiaVision AI Result - {scan.patient_name}")
+            + quote(f"AnemiScan Result - {scan.patient_name}")
             + "&body="
             + quote(share_text)
         ),
@@ -1389,7 +1389,7 @@ def create_app() -> Flask:
             )
 
         response = Response(output.getvalue(), mimetype="text/csv")
-        response.headers["Content-Disposition"] = "attachment; filename=anemiavision_history.csv"
+        response.headers["Content-Disposition"] = "attachment; filename=anemiscan_history.csv"
         return response
 
     @app.route("/history/delete/<int:scan_id>", methods=["POST"])
