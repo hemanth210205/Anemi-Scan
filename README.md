@@ -1,81 +1,151 @@
 # AnemiScan
 
-AI-powered anemia screening platform for conjunctiva and fingernail image analysis using deep learning. The application provides anemia prediction, Grad-CAM explainability, PDF report generation, patient record management, and analytics through a Flask-based web application.
+**AI-powered anemia screening from a smartphone photo of the eye conjunctiva or fingernail bed.**
 
----
+AnemiScan pairs an EfficientNet-B3 deep learning model with a clinical web workflow. Health workers can capture or upload an image, get a screening result with a confidence score and risk level, see which region drove the prediction (Grad-CAM), and export a patient-ready PDF report. All of it runs in a Flask web app that works on desktop and mobile.
 
-## Author
-
-**Gunti Hemanth Kumar**
+> ⚠️ AnemiScan is a **screening aid**, not a diagnostic device. Always confirm results with a laboratory hemoglobin test and a qualified medical professional.
 
 ---
 
 ## Features
 
-- 🩺 AI-assisted anemia screening from conjunctiva and fingernail images
-- 🧠 EfficientNet-B3 transfer learning model
-- 🔥 Grad-CAM visualization for model explainability
-- 📄 Automatic PDF report generation
-- 📊 Patient analytics dashboard
-- 📱 Mobile-friendly image capture and upload
-- 🧾 Patient history management with SQLite
-- 📈 CSV export and search functionality
-- 🚦 Rate-limited prediction API
-- 🐳 Docker and Gunicorn deployment support
+- 🩺 **Anemia screening** from conjunctiva and fingernail images (binary: Anemic / Non-Anemic)
+- 🧠 **EfficientNet-B3** transfer learning with a custom dense head and temperature-scaled confidence
+- 🔥 **Grad-CAM heatmaps** that show which image region drove the prediction
+- 🖼️ **Image quality checks** (blur, brightness and resolution) before inference
+- 📱 **Mobile-friendly capture**: upload a file or use the device camera directly
+- 🧾 **Patient history** with search, filters, sorting, pagination and CSV export
+- 📊 **Analytics dashboard**: detection rate, daily scan trend, age distribution and confidence distribution
+- 📄 **PDF reports** plus WhatsApp and email sharing of results
+- 🔌 **REST API** (`/api/predict`) with rate limiting
+- 🌗 **Light / dark theme** and a large-text accessibility mode
+- 🐳 **Docker, Gunicorn and Caddy** configuration for deployment
 
 ---
 
-## Project Overview
+## How it works
 
-AnemiScan is designed to assist healthcare professionals by providing quick anemia risk assessment using smartphone images.
-
-### Workflow
-
-1. Upload or capture an eye conjunctiva or fingernail image.
-2. Validate image quality.
-3. Perform anemia prediction using EfficientNet-B3.
-4. Generate Grad-CAM visualization.
-5. Store patient information.
-6. Generate downloadable PDF report.
-7. View historical reports and analytics.
+1. **Capture**: upload or photograph the eye conjunctiva or fingernail.
+2. **Validate**: the image is checked for blur, lighting and size.
+3. **Predict**: EfficientNet-B3 classifies the image and calibrates the confidence.
+4. **Explain**: Grad-CAM highlights the region that influenced the result (optional).
+5. **Record**: the scan and patient details are saved to SQLite.
+6. **Report**: review the verdict, risk level and estimated hemoglobin range, then export a PDF.
 
 ---
 
-## Tech Stack
+## Tech stack
 
-### Backend
-- Flask
-- Flask-SQLAlchemy
-- Gunicorn
-
-### Deep Learning
-- PyTorch
-- Torchvision
-- EfficientNet-B3
-
-### Frontend
-- HTML
-- Bootstrap 5
-- Chart.js
-- JavaScript
-
-### Database
-- SQLite
-
-### Image Processing
-- OpenCV
-- Pillow
-
-### Reports
-- ReportLab
-
-### Deployment
-- Docker
-- Docker Compose
+| Area | Tools |
+|---|---|
+| Deep learning | PyTorch, Torchvision, EfficientNet-B3, Grad-CAM |
+| Image processing | OpenCV, Pillow, NumPy |
+| Backend | Python 3.10, Flask, Flask-SQLAlchemy, SQLite, ReportLab |
+| Frontend | HTML, Bootstrap 5, JavaScript, Chart.js, Lucide icons |
+| Evaluation | scikit-learn, pandas, Matplotlib, Seaborn |
+| Deployment | Docker, Docker Compose, Gunicorn, Caddy |
 
 ---
 
-## Dataset Structure
+## Getting started
+
+### Requirements
+
+- **Python 3.10.** `torch==2.0.0` has no packages for newer Python versions such as 3.12 or 3.13.
+- Git
+
+### 1. Clone
+
+```bash
+git clone https://github.com/hemanth210205/Anemi-Scan.git
+cd Anemi-Scan
+```
+
+### 2. Create a virtual environment
+
+**Windows (PowerShell)**
+
+```powershell
+py -3.10 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+> If PowerShell blocks the activation script, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, then activate again.
+
+**macOS / Linux**
+
+```bash
+python3.10 -m venv .venv
+source .venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 4. Run
+
+```bash
+python app.py
+```
+
+Open **http://localhost:5000**. A trained model is included at `models/best_model.pth`, so no training is needed to try the app.
+
+To enable Grad-CAM heatmaps (off by default to save CPU):
+
+```powershell
+# PowerShell
+$env:ANEMIA_ENABLE_GRADCAM="true"; python app.py
+```
+
+```bash
+# macOS / Linux
+ANEMIA_ENABLE_GRADCAM=true python app.py
+```
+
+**Keyboard shortcuts:** press `N` to start a new scan and `H` to open patient history.
+
+---
+
+## Docker
+
+```bash
+docker compose up --build
+```
+
+The app is served on port 5000 through Gunicorn. The database, models, reports, logs, uploads and Grad-CAM folders are mounted as volumes, so data survives container restarts. Change `FLASK_SECRET_KEY` in `docker-compose.yml` before deploying.
+
+For HTTPS (which mobile browsers require for camera access), `deploy/Caddyfile` provides a reverse-proxy config. Replace `your-domain.example.com` with your domain.
+
+> Gunicorn does not run on Windows. On Windows, use `python app.py` or Docker.
+
+---
+
+## Deploy on Render
+
+The repo includes a [`render.yaml`](render.yaml) blueprint.
+
+1. Push the repo to GitHub.
+2. In the [Render dashboard](https://dashboard.render.com), choose **New → Blueprint** and select this repository.
+3. Render reads `render.yaml`, installs the CPU-only PyTorch build, and starts the app with Gunicorn. The first build takes several minutes.
+4. Open the `.onrender.com` URL once the health check at `/health` passes.
+
+Notes:
+
+- **Memory:** the app uses about 300 MB of RAM with the model loaded, which fits the 512 MB Free/Starter plans. Grad-CAM is turned off on Render because it needs extra memory. Enable it (`ANEMIA_ENABLE_GRADCAM=true`) only on a plan with 2 GB or more.
+- **Data is not persistent on the Free plan:** the SQLite database, uploads and PDF reports reset on every deploy or restart. For persistent data, use a paid plan, attach a disk (e.g. mounted at `/var/data`) and set `ANEMIA_DATABASE_PATH=/var/data/anemia_vision.db`.
+- **Cold starts:** Free services sleep after 15 minutes without traffic, and the first request after that can take up to a minute while the model loads.
+- **Camera capture** works because Render serves the app over HTTPS.
+
+---
+
+## Training and evaluation
+
+Place your dataset in a `dataset/` folder:
 
 ```
 dataset/
@@ -90,128 +160,28 @@ dataset/
     └── Non-anemic/
 ```
 
-The application automatically supports multiple folder naming conventions such as:
-
-- anemic
-- Anemic
-- Anemia
-- non-anemic
-- Non-anemic
-- Non_Anemia
-
-Run dataset validation:
+Folder names are matched flexibly (`anemic`, `Anemic`, `Anemia`, `non-anemic`, `Non_Anemia`, and so on).
 
 ```bash
-python utils/check_dataset.py
+python utils/check_dataset.py                        # validate the dataset
+python train.py                                      # train
+python train.py --resume models/last_checkpoint.pth  # resume training
+python evaluate.py --split test                      # evaluate on the test split
 ```
+
+Outputs: `models/best_model.pth`, `models/last_checkpoint.pth`, `logs/training.log` and `logs/evaluation/`. After evaluation, the metrics shown on the dashboard and About page come from your evaluation results instead of the configured defaults.
 
 ---
 
-## Installation
+## API
 
-### Clone Repository
+### `POST /api/predict`
 
-```bash
-git clone https://github.com/hemanth210205/Anemi-Scan.git
-cd Anemi-Scan
-```
-
-### Create Virtual Environment
-
-```bash
-python -m venv .venv
-```
-
-Activate:
-
-**Windows**
-
-```bash
-.venv\Scripts\activate
-```
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-Verify dataset:
-
-```bash
-python utils/check_dataset.py
-```
-
----
-
-## Docker
-
-```bash
-docker compose up --build
-```
-
----
-
-## Model Training
-
-Train model
-
-```bash
-python train.py
-```
-
-Resume training
-
-```bash
-python train.py --resume models/last_checkpoint.pth
-```
-
-Evaluate model
-
-```bash
-python evaluate.py --split test
-```
-
-Generated artifacts:
-
-- models/best_model.pth
-- models/last_checkpoint.pth
-- logs/training.log
-- logs/evaluation/
-
----
-
-## Running the Application
-
-Development
-
-```bash
-python app.py
-```
-
-Production
-
-```bash
-gunicorn --bind 0.0.0.0:5000 --workers 2 app:app
-```
-
-Health endpoint
-
-```
-GET /health
-```
-
----
-
-## API Endpoint
-
-### POST `/api/predict`
-
-Example request
+**Request**
 
 ```json
 {
-  "image": "<base64-image>",
+  "image": "<base64-encoded image>",
   "patient_name": "Aarav Kumar",
   "age": 25,
   "gender": "M",
@@ -221,7 +191,7 @@ Example request
 }
 ```
 
-Example response
+**Response**
 
 ```json
 {
@@ -235,59 +205,87 @@ Example response
 }
 ```
 
+Rate limit: 10 requests per minute by default (`ANEMIA_RATE_LIMIT_PER_MINUTE`).
+
+### Other routes
+
+| Route | Purpose |
+|---|---|
+| `/` | Dashboard |
+| `/scan` | New patient scan |
+| `/result/<id>` | Screening result |
+| `/history` | Patient history (search, filter, CSV export) |
+| `/analytics` | Analytics dashboard |
+| `/export/pdf/<id>` | Download a PDF report |
+| `/about` | Model, dataset and limitations |
+| `/author` | Author profile |
+| `/health` | Health check |
+
 ---
 
-## Project Structure
+## Configuration
+
+Common environment variables (see `config.py` for the full list):
+
+| Variable | Default | Description |
+|---|---|---|
+| `PORT` | `5000` | Port the app listens on |
+| `ANEMIA_ENABLE_GRADCAM` | `false` | Generate Grad-CAM heatmaps |
+| `ANEMIA_RATE_LIMIT_PER_MINUTE` | `10` | API rate limit |
+| `ANEMIA_TORCH_THREADS` | `1` | CPU threads for inference |
+| `ANEMIA_GUNICORN_WORKERS` | `1` | Gunicorn worker count |
+| `ANEMIA_DATASET_ROOT` | `dataset/` | Dataset location |
+| `ANEMIA_DATABASE_PATH` | `database/anemia_vision.db` | SQLite database file |
+
+---
+
+## Project structure
 
 ```
 Anemi-Scan/
-│
-├── app.py
-├── train.py
-├── predict.py
-├── evaluate.py
-├── model.py
-├── dataset.py
-├── requirements.txt
-├── templates/
-├── static/
-├── models/
-├── reports/
-├── database/
-├── deploy/
-├── utils/
-└── Dockerfile
+├── app.py               # Flask app: routes, database models, API
+├── config.py            # Paths, training/Flask config, author profile
+├── model.py             # EfficientNet-B3 model definition
+├── dataset.py           # Dataset discovery and data loaders
+├── train.py             # Training pipeline
+├── evaluate.py          # Evaluation and metrics
+├── predict.py           # Inference helpers
+├── gradcam.py           # Grad-CAM and temperature scaling
+├── image_validator.py   # Image quality checks
+├── pdf_report.py        # PDF report generation
+├── templates/           # Jinja2 pages (dashboard, scan, result, history, analytics, about, author)
+├── static/              # CSS, JavaScript, uploads, Grad-CAM images
+├── models/              # Trained checkpoint and temperature scaling
+├── database/            # SQLite database
+├── reports/             # Generated PDF reports
+├── logs/                # Training logs and plots
+├── deploy/              # Caddy reverse-proxy config
+├── utils/               # Dataset checker
+├── Dockerfile
+├── docker-compose.yml
+└── requirements.txt
 ```
 
 ---
 
-## Deployment
+## Roadmap
 
-- Python 3.10
-- Docker
-- Docker Compose
-- Gunicorn
-- Flask
-
-Persistent folders:
-
-- database/
-- models/
-- reports/
-- logs/
-- static/uploads/
-- static/gradcam/
+- Multi-class anemia severity prediction
+- Larger and more diverse clinical dataset
+- Integration with Electronic Health Records (EHR)
+- Native mobile application
+- Improved explainability methods
 
 ---
 
-## Future Improvements
+## Author
 
-- Multi-class anemia severity prediction
-- Cloud deployment support
-- Integration with Electronic Health Records (EHR)
-- Mobile application
-- Improved explainability methods
-- Larger clinical dataset support
+**Gunti Hemanth Kumar**, AI Engineer
+Computer Science and Engineering graduate, Indian Institute of Information Technology, Surat
+
+- 📧 [hk744610@gmail.com](mailto:hk744610@gmail.com)
+- 💼 [linkedin.com/in/hemanth131104](https://www.linkedin.com/in/hemanth131104)
+- 🐙 [github.com/hemanth210205](https://github.com/hemanth210205)
 
 ---
 
@@ -295,8 +293,6 @@ Persistent folders:
 
 This project is intended for academic and research purposes.
 
----
-
 ## Disclaimer
 
-This application is intended for anemia screening assistance only and should not be considered a replacement for professional medical diagnosis. Clinical decisions should always be made by qualified healthcare professionals.
+AnemiScan is intended for anemia screening assistance only and is not a replacement for professional medical diagnosis. Lighting, camera quality, motion and skin-tone variation can affect predictions, and the hemoglobin range is a rough visual estimate. Clinical decisions should always be made by qualified healthcare professionals.
